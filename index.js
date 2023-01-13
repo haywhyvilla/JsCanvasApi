@@ -1,7 +1,7 @@
-const { Engine, Render, Runner, World, Bodies } = Matter;
+const { Engine, Render, Runner, World, Bodies, Body } = Matter;
 
 const cells = 3;
-const width = 800;
+const width = 600;
 const height = 600;
 
 const unitLenght = width / cells;
@@ -22,10 +22,10 @@ Render.run(render);
 Runner.run(Runner.create(), engine);
 
 const walls = [
-  Bodies.rectangle(width / 2, 0, width, 40, { isStatic: true }),
-  Bodies.rectangle(width / 2, height, width, 40, { isStatic: true }),
-  Bodies.rectangle(0, height / 2, 40, height, { isStatic: true }),
-  Bodies.rectangle(width, height / 2, 40, height, { isStatic: true }),
+  Bodies.rectangle(width / 2, 0, width, 2, { isStatic: true }),
+  Bodies.rectangle(width / 2, height, width, 2, { isStatic: true }),
+  Bodies.rectangle(0, height / 2, 2, height, { isStatic: true }),
+  Bodies.rectangle(width, height / 2, 2, height, { isStatic: true }),
 ];
 World.add(world, walls);
 
@@ -135,4 +135,57 @@ horizontals.forEach((row, rowIndex) => {
     );
     World.add(world, wall);
   });
+});
+
+verticals.forEach((row, rowIndex) => {
+  row.forEach((open, columnIndex) => {
+    if (open) {
+      return;
+    }
+
+    const wall = Bodies.rectangle(
+      columnIndex * unitLenght + unitLenght,
+      rowIndex * unitLenght + unitLenght / 2,
+      10,
+      unitLenght,
+      {
+        isStatic: true,
+      }
+    );
+    World.add(world, wall);
+  });
+});
+
+// Goal
+
+const goal = Bodies.rectangle(
+  width - unitLenght / 2,
+  height - unitLenght / 2,
+  unitLenght * 0.7,
+  unitLenght * 0.7,
+  {
+    isStatic: true,
+  }
+);
+
+World.add(world, goal);
+
+// Ball
+
+const ball = Bodies.circle(unitLenght / 2, unitLenght / 2, unitLenght / 4);
+World.add(world, ball);
+
+document.addEventListener("keydown", (event) => {
+  if (event.keyCode === 87) {
+    console.log("move ball up");
+  }
+  if (event.keyCode === 68) {
+    console.log("move ball right");
+  }
+  if (event.keyCode === 83) {
+    console.log("move ball down");
+  }
+  if (event.keyCode === 65) {
+    console.log("move ball left");
+  }
 });
